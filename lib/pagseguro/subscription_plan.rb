@@ -5,11 +5,20 @@ module PagSeguro
     include Extensions::MassAssignment
     include Extensions::Credentiable
 
+    attr_accessor :reference
+    attr_accessor :sender
+    attr_accessor :notification_url
+    attr_accessor :redirect_url
+    attr_accessor :review_url
+
     # Max users a plan can have at time
     attr_accessor :max_users
 
     # The name of the plan
     attr_accessor :name
+
+    # The details of the plan
+    attr_accessor :details
 
     # The charge of payment
     attr_accessor :charge
@@ -51,6 +60,10 @@ module PagSeguro
       Response.new(request, self).serialize
 
       self
+    end
+
+    def url
+      PagSeguro.site_url("#{API_VERSION}/pre-approvals/request.html?code=#{code}") if code
     end
 
     private

@@ -24,9 +24,22 @@ module PagSeguro
       def xml_builder
         Nokogiri::XML::Builder.new(encoding: PagSeguro.encoding) do |xml|
           xml.send(:preApprovalRequest) {
+            xml.send(:reference, object.reference)
+            xml.send(:notificationUrl, object.notification_url)
+            xml.send(:redirectUrl, object.redirect_url)
+            xml.send(:reviewUrl, object.review_url)
             xml.send(:maxUsers, object.max_users)
+            xml.send(:sender) {
+              xml.send(:name, object.sender[:name])
+              xml.send(:email, object.sender[:email])
+              xml.send(:phone) {
+                xml.send(:areaCode, object.sender[:phone][:area_code])
+                xml.send(:number, object.sender[:phone][:number])
+              }
+            }
             xml.send(:preApproval) {
               xml.send(:name, object.name)
+              xml.send(:details, object.details)
               xml.send(:charge, object.charge)
               xml.send(:period, object.period)
               xml.send(:amountPerPayment, to_amount(object.amount))
